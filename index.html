@@ -2,588 +2,377 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>App de Canales AceStream</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPERVECTAR AceStream TV</title>
 <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(#010712, #010712, #010712);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
+  body {
+    font-family: Arial, sans-serif;
+    background: #181818;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background: #222;
+    padding: 10px;
+    text-align: center;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #FFD700;
+  }
+
+  .header-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  #searchInput {
+    width: 90%;
+    max-width: 400px;
+    padding: 8px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  .category-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: #222;
+    overflow-x: visible;
+  }
+
+  .category-btn {
+    flex: 0 1 auto;
+    white-space: normal;
+    text-align: center;
+    background: #444;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .category-btn.active {
+    background: #ff5722;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(255,87,34,0.6);
+  }
+
+  #notice {
+    text-align: center;
+    background: #ffcc00;
+    color: #000;
+    padding: 10px;
+    font-size: 0.95rem;
+    border-radius: 5px;
+    margin: 10px auto;
+    max-width: 95%;
+  }
+  #notice a {
+    color: #000;
+    text-decoration: underline;
+    margin: 0 5px;
+  }
+
+  h2.category-title {
+    background: #2a2a2a;
+    padding: 10px;
+    margin: 0;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    border-top: 2px solid #444;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #202020;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    transition: background 0.3s;
+  }
+
+  li:hover {
+    background: #2a2a2a;
+  }
+
+  .channel-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .channel-info img.logo {
+    width: 80px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .channel-info a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .channel-info a:hover {
+    text-decoration: underline;
+  }
+
+  .channel-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .play-btn {
+    background: #ff5722;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+  }
+
+  .play-btn:hover {
+    background: #e64a19;
+  }
+
+  .favorite-btn {
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .favorite-btn.active {
+    color: #ffcc00;
+  }
+
+  @media (max-width: 600px) {
+    .channel-info img.logo {
+      width: 60px;
     }
-    header {
-        text-align: center;
-        padding: 20px;
-        background-color: #f2fa05;
-        width: 100%;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
-    header h1 {
-        margin: 0;
-        color: #010712;
-        font-size: 2em;
-        display: flex;
-        align-items: center;
-    }
-    header img {
-        width: 50px;
-        height: 50px;
-        vertical-align: middle;
-    }
-	#notice {
-        background-color: #ffeb3b;
-        color: #010712;
-        padding: 10px 20px;
-        margin: 15px 0;
-        border-radius: 8px;
-        font-weight: bold;
-        text-align: center;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        width: 90%;
-        max-width: 700px;
-    }
-    #notice a {
-        color: #010712;
-        text-decoration: underline;
-        font-weight: bold;
-    }
-    #controls {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin: 20px 0;
-        gap: 10px;
-    }
-    #search {
-        padding: 10px 15px;
-        border-radius: 25px;
-        border: 1px solid #ccc;
-        font-size: 1em;
-        outline: none;
-        width: 200px;
-        transition: border-color 0.2s;
-    }
-    #search:focus {
-        border-color: #f2fa05;
+    .channel-info a {
+      font-size: 0.9rem;
     }
     .category-btn {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 20px;
-        background-color: #f2fa05;
-        color: #010712;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.2s;
+      font-size: 0.85rem;
+      padding: 6px 12px;
     }
-    .category-btn.active, .category-btn:hover {
-        background-color: #f2fa05;
+    .header-logo {
+      width: 30px;
+      height: 30px;
     }
-    ul {
-        list-style: none;
-        padding: 0;
-        width: 90%;
-        max-width: 600px;
+    header h1 {
+      font-size: 1.2rem;
     }
-    li {
-        margin: 10px 0;
-        padding: 15px 20px;
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    li:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    }
-    .channel-info {
-        display: flex;
-        align-items: center;
-    }
-    .icon {
-        margin-right: 10px;
-        font-size: 1.2em;
-    }
-    .logo {
-        width: 160px;
-        height: 80px;
-        margin-right: 10px;
-        border-radius: 8px;
-        object-fit: contain;
-        border: 1px solid #ccc;
-    }
-    .favorite-btn {
-        background: none;
-        border: none;
-        font-size: 1.2em;
-        cursor: pointer;
-        color: #ccc;
-        transition: color 0.2s;
-    }
-    .favorite-btn.active {
-        color: #FFD700;
-    }
-    @media (max-width: 600px) {
-        #controls {
-            flex-direction: column;
-        }
-        #search {
-            width: 100%;
-        }
-        .logo {
-            width: 30px;
-            height: 30px;
-        }
-        header img {
-            width: 40px;
-            height: 40px;
-        }
-        header h1 {
-            font-size: 1.5em;
-        }
-    }
+  }
 </style>
 </head>
 <body>
 
 <header>
-    <img src="https://i.ibb.co/LzGF321b/vec-ace.jpg" alt="AceStream Logo">
-    <h1>SUPERVECTAR AceStream 2</h1>
+  <h1>
+    <img src="https://i.ibb.co/LzGF321b/vec-ace.jpg" 
+         alt="Logo" class="header-logo">
+    SUPERVECTAR AceStream TV
+  </h1>
+  <input type="text" id="searchInput" placeholder="🔍 Buscar canal...">
 </header>
 
 <div id="notice">
   ⚠️ Para reproducir los canales es necesario tener instalado el reproductor ACESTREAM: 
-  <a href="https://drive.google.com/file/d/1tYrt9DuNQZANYfL4ZciRVc2BCB8U370l/view?usp=drive_link" target="_blank">Descargar AceStream Android</a>.
-  <a href="https://drive.google.com/file/d/1q997S8Niwa3g8hmjACZOaAOQ-OY-Fldl/view?usp=drive_link" target="_blank">Descargar AceStream Windows</a>.
+  <a href="https://play.google.com/store/apps/details?id=org.acestream.node&hl=es" target="_blank">Descargar AceStream Android</a> |
+  <a href="https://drive.google.com/file/d/1q997S8Niwa3g8hmjACZOaAOQ-OY-Fldl/view?usp=drive_link" target="_blank">Descargar AceStream Windows</a>
 </div>
 
-<div id="controls">
-<div style="margin: 20px;">
-    <input type="text" id="search" placeholder="Buscar canal...">
-    <button class="category-btn active" data-category="all">Todos los canales</button>
-    <button class="category-btn" data-category="entretenimiento">CINE Y SERIES</button>
-    <button class="category-btn" data-category="DOCUMENTALES Y MAS">DOCUMENTALES Y MAS</button>	
-    <button class="category-btn" data-category="TDT ESPAÑA">TDT ESPAÑA</button>		
+<div class="category-bar" id="categoryBar">
+  <button class="category-btn active" data-category="all" title="Todos los canales">Todos</button>
+  <button class="category-btn" data-category="favorites" title="⭐ Favoritos">⭐ Favoritos</button>
 </div>
 
-<ul id="channelList">
-	    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://1ab443f5b4beb6d586f19e8b25b9f9646cf2ab78" title="Reproducir Canal">MOVISTAR + FHD (EL CANO)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://8c67cdb5ba81976662c3a67984a9545d9cfb0f70" title="Reproducir Canal">MOVISTAR + FHD (NEW ERA)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://b6ffbbc72a5b6b579faf79ebac229af7a25b933b" title="Reproducir Canal">MOVISTAR + FHD (NEW ERA)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://199190e3f28c1de0be34bccf0d3568dc65209b99" title="Reproducir Canal">MOVISTAR + FHD (NEW ERA VI)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://5866e83279307bf919068ae7a0d250e4e424e464" title="Reproducir Canal">MOVISTAR + FHD (NEW ERA VI)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Movistar_Plus%2B_2022_logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://e19c1fc5e3ada56c60d45257f7f4ed0d14bf7003" title="Reproducir Canal">M+ 2 FHD (NEW ERA)</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Originales_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://096b817fcc836535f608facb15fca6408fae3162" title="Reproducir Canal">M+ ORIGINALES</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Estrenos_por_Movistar_Plus%2B_2025_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://5d35f906b735f25164fa2b9b7a4e6ef91dfed131" title="Reproducir Canal">M+ ESTRENOS</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Hits_por_Movistar_Plus%2B_2025_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://50553edb5e8c54d15e0d43161369b3b4cef95065" title="Reproducir Canal">M+ HITS</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Acci%C3%B3n_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://089673779de9fa7a18ac8dc26eb4a79cf5a86f96" title="Reproducir Canal">M+ ACCION</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/Comedia_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://cf0cb321eed6765c2eadbd9983570f6674ce5df6" title="Reproducir Canal">M+ COMEDIA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-	    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Drama_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://a6de6a4977d7801bbddc9c7739d822f4beb358ae" title="Reproducir Canal">M+ DRAMA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Cine_Espa%C3%B1ol_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://e4bce95dd4faeb9cb09ade36a0636bc4b22b691c" title="Reproducir Canal">M+ CINE ESPAÑOL </a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Cl%C3%A1sicos_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://6462c8f65fcaa6e4fc874fef8d1e45bb7a7e6bae" title="Reproducir Canal">M+ CLASICOS</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/Indie_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://7716c9fd5bd4413715e4e26f97efb91802f6ee80" title="Reproducir Canal">M+ INDIE</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://www.movistarplus.es/recorte/m-NEO/canal/TERROR.png" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://cf99e99c105162410ec6d1f68cc6f4811560fee7" title="Reproducir Canal">M+ TERROR</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-	    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://www.movistarplus.es/recorte/m-NEO/canal/MROMA.png" alt="Canal 1 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://4bfeb0516c44c4f0e3502e3f1ca1035d39ddf9c2" title="Reproducir Canal">M+ ROMANCE</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Dark_Teuve_2.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://25465ea2deba65c623b7659136abf6fcc9f5dc20" title="Reproducir Canal">DARK</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/SYFY.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://8e1bbcb6a6b8b9bb0e1144454fda35531107cdb3" title="Reproducir Canal">SYFY</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/AMC_logo_2019.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://55ff9ee631af351f365f51cf3601695bf1fd20f3" title="Reproducir Canal">AMC</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="entretenimiento">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/XTRM_Espa%C3%B1a.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://d7d3830018cfd93c7430c19ba703a053680476a0" title="Reproducir Canal">XTRM</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Documentales_por_Movistar_Plus%2B_2023_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://b3fc9b5647c5933b101c0b6b64322590c68587b9" title="Reproducir Canal">M+ DOCUMENTALES</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f1/2019_Discovery_logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://670519ffe8db1e20d0c753d4f756c009e71173d8" title="Reproducir Canal">DISCOVERY CHANNEL</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://www.movistarplus.es/recorte/m-DPBLAN/guiamovil/CAZPES.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://8b9e46eb3a9b4ef23b7d3d86c73a0851580f8caa" title="Reproducir Canal">CAZA Y PESCA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://www.movistarplus.es/recorte/m-DPBLAN/guiamovil/CAZPES.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://277a6fb47189db801c5b7b05ad89c690571f3e9c" title="Reproducir Canal">CAZA Y PESCA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>		
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Toros-movistar.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://cd0188292b6b3876ff66c99bd3d25eab88b41079" title="Reproducir Canal">ONETORO</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Toros-movistar.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://877eceeaf9f3bd9b392359323d03d0ac3bb27312" title="Reproducir Canal">ONETORO</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://toroletv.com/wp-content/uploads/2025/03/torole_logotipo_blanco.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://56457cde219abe22cdc3f6c2083a37b0324b3b0c" title="Reproducir Canal">TOROLE</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Canal_Cocina.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://96f092e1fa99062f6da14cae230b877ad3ed849b" title="Reproducir Canal">CANAL COCINA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="DOCUMENTALES Y MAS">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Canal_Decasa_logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://155d742120310a0ca80b0c8833d94979aa7f0b08" title="Reproducir Canal">CANAL DECASA</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Logo_La_1.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://dad5e0e0825cb3e410008f1c4252387b868e740c" title="Reproducir Canal">LA 1 FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Logo_La_1.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://7597d4feb3195079ffa606cf23a183d626ee40ba" title="Reproducir Canal">LA 1 FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Logo_La_1.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://6a54f8fb00406c88f68ac3f3aabc7d084f9573d0" title="Reproducir Canal">LA 1 4K</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Logo_La_2.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://9934906503661142f97a044ae1509a294057c2ed" title="Reproducir Canal">LA 2 FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Antena_3_2025_%28sin_wordmark%29.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://f9d2a6d5da8d1f2423a0b6ed0047636a728040e9" title="Reproducir Canal">ANTENA 3 FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Cuatro.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://8d66979e705a8b532b9243bbc0862c0f1c734ef0" title="Reproducir Canal">CUATRO FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Cuatro.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://8670df538a11c6ec97b3f634981ddc4409ca0333" title="Reproducir Canal">CUATRO FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Telecinco_2024_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://3e7b1911a1f83fd869b6995650a3057778259ca7" title="Reproducir Canal">TELECINCO FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Telecinco_2024_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://5133d1e8f45095f0b7dabbd78db0ce19a496f7bf" title="Reproducir Canal">TELECINCO FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/Telecinco_2024_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://3d376333ee90d6db3d413fc5764ef635882076f5" title="Reproducir Canal">TELECINCO FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/LaSexta_2024_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://44828a7580cd99fcb36245c327889c47f34b457f" title="Reproducir Canal">LA SEXTA FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/BeMad_2022_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://6e1b5fd8753352486aa932f802534a17556e1f60" title="Reproducir Canal">BE MAD FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>	
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/TEN_2024_Logo.svg" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://19cab799c86251ae8ae5f4b4faace9b78d784abc" title="Reproducir Canal">TEN FHD</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-    <li data-category="TDT ESPAÑA">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Discovery_Channel_logo.svg/1200px-Discovery_Channel_logo.svg.png" alt="Canal 3 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://fedcba0987654321fedcba0987654321fedcba09" title="Reproducir Canal">Canal vacio</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>		
-    <li data-category="VACIO">
-        <div class="channel-info">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/CNN.svg/1200px-CNN.svg.png" alt="Canal 5 Logo" class="logo">
-            <span class="icon">▶</span>
-            <a href="acestream://ffeeddccbbaa0099887766554433221100ffeedd" title="Reproducir Canal">Canal vacio</a>
-        </div>
-        <button class="favorite-btn">★</button>
-    </li>
-</ul>
-
-<p>Nota: Necesitas tener instalado AceStream o VLC con soporte AceStream para reproducir estos enlaces.</p>
+<div id="channelContainer"></div>
 
 <script>
-    const searchInput = document.getElementById('search');
-    const channelList = document.getElementById('channelList');
-    const channels = channelList.getElementsByTagName('li');
-    const categoryButtons = document.querySelectorAll('.category-btn');
+const LISTA_URL = "https://raw.githubusercontent.com/supervectar-coder/listaaACEtv/refs/heads/main/lista%20SUPERVECTAR%20ACESTREAM%20TV.m3u";
+const channelContainer = document.getElementById('channelContainer');
+const searchInput = document.getElementById('searchInput');
+const categoryBar = document.getElementById('categoryBar');
 
-    // Filtrar por búsqueda
-    searchInput.addEventListener('input', filterChannels);
+let channels = [];
+let categories = new Set();
+let activeCategory = 'all';
 
-    // Filtrar por categoría
-    let activeCategory = 'all';
-    categoryButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            categoryButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeCategory = btn.dataset.category;
-            filterChannels();
-        });
-    });
+// ------------------ CARGAR LISTA --------------------
+fetch(LISTA_URL)
+.then(res => {
+  if(!res.ok) throw new Error(`Error HTTP ${res.status}`);
+  return res.text();
+})
+.then(text => {
+  const lines = text.split('\n');
+  for(let i=0;i<lines.length;i++){
+    const line = lines[i].trim();
+    if(line.startsWith('#EXTINF')){
+      const info = line.substring(8);
+      const parts = info.split(',');
+      const channelName = parts.length>1 ? parts[1].trim() : parts[0].trim();
 
-    function filterChannels() {
-        const filter = searchInput.value.toLowerCase();
-        for (let i = 0; i < channels.length; i++) {
-            const name = channels[i].textContent.toLowerCase();
-            const categoryMatch = channels[i].dataset.category;
-            if (name.includes(filter) && (categoryMatch === activeCategory || activeCategory === 'all')) {
-                channels[i].style.display = '';
-            } else {
-                channels[i].style.display = 'none';
-            }
-        }
+      let logoUrl = '';
+      let category = 'otros';
+      const attrs = parts[0].split(' ');
+      attrs.forEach(attr=>{
+        if(attr.startsWith('tvg-logo=')) logoUrl = attr.split('=')[1].replace(/"/g,'');
+        if(attr.startsWith('group-title=')) category = attr.split('=')[1].replace(/"/g,'');
+      });
+
+      const url = lines[++i]?.trim();
+      if(url){
+        channels.push({name:channelName, logo:logoUrl, category, url});
+        categories.add(category);
+      }
     }
+  }
+  renderCategories();
+  renderChannels();
+})
+.catch(error=>{
+  console.error(error);
+  const notice = document.getElementById('notice');
+  notice.style.display='block';
+  notice.style.background='#b71c1c';
+  notice.style.color='#fff';
+  notice.innerHTML='⚠️ No se pudo cargar la lista IPTV. Revisa la conexión o URL.';
+});
 
-    // Botón de favoritos
-    const favoriteButtons = document.querySelectorAll('.favorite-btn');
-    favoriteButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            btn.classList.toggle('active');
-        });
+// ------------------ CATEGORÍAS --------------------
+function renderCategories(){
+  categories.forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className='category-btn';
+    btn.textContent=cat;
+    btn.dataset.category=cat;
+    btn.title=cat;
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory=cat;
+      renderChannels();
     });
-</script>
+    categoryBar.appendChild(btn);
+  });
 
+  document.querySelectorAll('.category-btn[data-category="all"], .category-btn[data-category="favorites"]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory=btn.dataset.category;
+      renderChannels();
+    });
+  });
+}
+
+// ------------------ RENDER CANALES --------------------
+function renderChannels(){
+  channelContainer.innerHTML='';
+  const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  const searchTerm = searchInput.value.toLowerCase();
+
+  const grouped = {};
+  channels.forEach(c=>{
+    const isFav = savedFavorites.includes(c.url);
+    const matchCategory = activeCategory==='all' || c.category===activeCategory || (activeCategory==='favorites' && isFav);
+    const matchSearch = c.name.toLowerCase().includes(searchTerm);
+
+    if(matchCategory && matchSearch){
+      const catKey = (activeCategory==='favorites') ? '⭐ Favoritos' : c.category;
+      if(!grouped[catKey]) grouped[catKey]=[];
+      grouped[catKey].push(c);
+    }
+  });
+
+  let sortedCategories = Object.keys(grouped).sort((a,b)=>a.localeCompare(b));
+  sortedCategories.forEach(cat=>{
+    const h2 = document.createElement('h2');
+    h2.className='category-title';
+    h2.textContent = cat;
+    channelContainer.appendChild(h2);
+
+    const ul = document.createElement('ul');
+    // ❌ Eliminado el sort para mantener orden original de la M3U
+    // grouped[cat].sort((a,b)=>a.name.localeCompare(b.name));
+
+    grouped[cat].forEach(c=>{
+      const li=document.createElement('li');
+      li.innerHTML=`
+        <div class="channel-info">
+          <img src="${c.logo || 'https://via.placeholder.com/160x80?text=Logo'}" alt="${c.name} Logo" class="logo" loading="lazy">
+          <a href="${c.url}" data-url="${c.url}" title="Reproducir">${c.name}</a>
+        </div>
+        <div class="channel-actions">
+          <button class="play-btn">▶ Reproducir</button>
+          <button class="favorite-btn ${savedFavorites.includes(c.url)?'active':''}">★</button>
+        </div>
+      `;
+      li.querySelector('.play-btn').addEventListener('click',()=>{
+        if(c.url.startsWith('acestream://')) window.location.href=c.url;
+        else window.open(c.url,'_blank');
+      });
+      li.querySelector('a').addEventListener('click',e=>{
+        e.preventDefault();
+        if(c.url.startsWith('acestream://')) window.location.href=c.url;
+        else window.open(c.url,'_blank');
+      });
+      li.querySelector('.favorite-btn').addEventListener('click',e=>{
+        const btn=e.currentTarget;
+        btn.classList.toggle('active');
+        const favs=JSON.parse(localStorage.getItem('favorites')||'[]');
+        const idx=favs.indexOf(c.url);
+        if(btn.classList.contains('active')){if(idx===-1) favs.push(c.url);}
+        else{if(idx>-1) favs.splice(idx,1);}
+        localStorage.setItem('favorites',JSON.stringify(favs));
+        if(activeCategory==='favorites') renderChannels();
+      });
+      ul.appendChild(li);
+    });
+    channelContainer.appendChild(ul);
+  });
+}
+
+searchInput.addEventListener('input', renderChannels);
+</script>
 </body>
 </html>
